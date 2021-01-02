@@ -1,0 +1,28 @@
+name: ReleaseMaster
+
+on:
+  push:
+    branches:
+      - release
+  workflow_dispatch:
+
+jobs:
+  pre-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: npm ci
+      - name: Set GITHUB_RELEASE_VERSION
+        run: echo "GITHUB_RELEASE_VERSION=$(npx semantic-release --dryRun --no-ci | grep -oP 'Published release \K.*? ')" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Generate build
+      
+      - name: Create release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
