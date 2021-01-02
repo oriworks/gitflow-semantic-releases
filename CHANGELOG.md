@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/oriworks/gitflow-semantic-releases/compare/v1.0.0...v1.1.0) (2021-01-02)
+
+
+### Features
+
+* add pre-release workflow ([55f6440](https://github.com/oriworks/gitflow-semantic-releases/commit/55f644036c32cad3d97fd4a4e0beeb47752740d9))
+
 # 1.0.0 (2021-01-02)
 
 
