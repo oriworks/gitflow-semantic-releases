@@ -40,3 +40,5 @@ jobs:
             git pull
             git merge --no-ff master -m "chore(merge): merge 'master' into 'develop'"
             git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
