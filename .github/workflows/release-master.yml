@@ -1,0 +1,42 @@
+name: ReleaseMaster
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  release-master:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: npm ci
+      - name: Set GITHUB_RELEASE_VERSION
+        run: echo "GITHUB_RELEASE_VERSION=$(npx semantic-release --dryRun --no-ci | grep -oP 'Published release \K.*? ')" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Generate build
+      
+      - name: Create release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - uses: actions/checkout@v2
+      - name: Set Git config
+        run: |
+            git config --local user.email "actions@github.com"
+            git config --local user.name "Github Actions"    
+      - name: Merge master to develop
+        run: |
+            git fetch --unshallow
+            git pull
+            git checkout develop
+            git pull
+            git merge --no-ff master -m "chore(merge): merge 'master' into 'develop'"
+            git push
