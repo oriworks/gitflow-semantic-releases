@@ -1,0 +1,27 @@
+name: UpdatePreRelease
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  release-master:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+      
+      - uses: actions/checkout@v2
+      - name: Set Git config
+        run: |
+            git config --local user.email "actions@github.com"
+            git config --local user.name "Github Actions"
+
+      - name: Merge develop into release
+        run: |
+            git fetch --unshallow
+            git checkout release
+            git pull
+            git merge --no-ff develop -m "chore(merge): merge 'develop' into 'release'"
+            git push
