@@ -20,29 +20,12 @@ jobs:
         run: echo "GITHUB_RELEASE_VERSION=$(npx semantic-release --dryRun --no-ci | grep -oP 'Published release \K.*? ')" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
       # Generate build
       
       - name: Create release
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
-          persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token
-          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
-      - name: Set Git config
-        run: |
-            git config --local user.email "actions@github.com"
-            git config --local user.name "Github Actions"    
-      - name: Merge master to develop
-        run: |
-            git fetch --unshallow
-            git pull
-            git checkout develop
-            git pull
-            git merge --no-ff master -m "chore(merge): merge 'master' into 'develop'"
-            git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Deploy Live

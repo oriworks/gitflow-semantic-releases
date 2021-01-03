@@ -20,9 +20,12 @@ jobs:
         run: echo "GITHUB_RELEASE_VERSION=$(npx semantic-release --dryRun --no-ci | grep -oP 'Published release \K.*? ')" >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
       # Generate build
       
       - name: Create release
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      # Deploy Pre-Live
